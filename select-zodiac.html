@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR VoiceQR - เลือกราศี</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px cyan;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+
+        .zodiac-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .zodiac-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .zodiac-card:hover {
+            border-color: cyan;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .zodiac-card.available {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .zodiac-card.unavailable {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .zodiac-name-en {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .zodiac-name-th {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: cyan;
+        }
+
+        .zodiac-emoji {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            font-size: 0.9em;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .status.available {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+        }
+
+        .status.unavailable {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .qr-info {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid cyan;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .zodiac-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 AR VoiceQR ราศี</h1>
+        <p class="subtitle">เลือกราศีเพื่อดู AR Hologram</p>
+
+        <div class="zodiac-grid" id="zodiacGrid">
+            <!-- จะถูกสร้างด้วย JavaScript -->
+        </div>
+
+        <div class="instructions">
+            <h3>📱 วิธีการใช้งาน</h3>
+            <ul>
+                <li><strong>ราศีที่พร้อมใช้งาน:</strong> คลิกที่การ์ดสีเขียวเพื่อดู AR Hologram</li>
+                <li><strong>ราศีที่ยังไม่พร้อม:</strong> การ์ดสีแดงยังไม่มีข้อมูลใน Google Sheets</li>
+                <li><strong>QR Code:</strong> สแกน QR Code เพื่อเข้าถึงราศีตุลย์โดยตรง</li>
+            </ul>
+        </div>
+
+        <div class="qr-info">
+            <h4>🔗 QR Code ที่มีอยู่</h4>
+            <p>QR Code ที่สร้างไว้แล้วจะนำไปสู่: <br>
+            <code>index.html?sign=libra</code> (ราศีตุลย์)</p>
+            <p style="margin-top: 15px;">
+                <a href="how-to-use.html" style="color: cyan; text-decoration: none; border: 1px solid cyan; padding: 8px 16px; border-radius: 15px; display: inline-block; transition: all 0.3s ease;" 
+                   onmouseover="this.style.background='rgba(0,255,255,0.2)'" 
+                   onmouseout="this.style.background='transparent'">
+                    📱 วิธีใช้ QR Code
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const zodiacSigns = [
+            { en: 'aries', th: 'ราศีเมษ', emoji: '♈', available: false },
+            { en: 'taurus', th: 'ราศีพฤษภ', emoji: '♉', available: false },
+            { en: 'gemini', th: 'ราศีเมถุน', emoji: '♊', available: false },
+            { en: 'cancer', th: 'ราศีกรกฎ', emoji: '♋', available: false },
+            { en: 'leo', th: 'ราศีสิงห์', emoji: '♌', available: false },
+            { en: 'virgo', th: 'ราศีกันย์', emoji: '♍', available: false },
+            { en: 'libra', th: 'ราศีตุลย์', emoji: '♎', available: true },
+            { en: 'scorpio', th: 'ราศีพิจิก', emoji: '♏', available: false },
+            { en: 'sagittarius', th: 'ราศีธนู', emoji: '♐', available: false },
+            { en: 'capricorn', th: 'ราศีมกร', emoji: '♑', available: false },
+            { en: 'aquarius', th: 'ราศีกุมภ์', emoji: '♒', available: false },
+            { en: 'pisces', th: 'ราศีมีน', emoji: '♓', available: false }
+        ];
+
+        function createZodiacGrid() {
+            const grid = document.getElementById('zodiacGrid');
+            
+            zodiacSigns.forEach(sign => {
+                const card = document.createElement('div');
+                card.className = `zodiac-card ${sign.available ? 'available' : 'unavailable'}`;
+                
+                if (sign.available) {
+                    card.onclick = () => {
+                        window.open(`index.html?sign=${sign.en}`, '_blank');
+                    };
+                }
+
+                card.innerHTML = `
+                    <div class="zodiac-emoji">${sign.emoji}</div>
+                    <div class="zodiac-name-en">${sign.en.toUpperCase()}</div>
+                    <div class="zodiac-name-th">${sign.th}</div>
+                    <div class="status ${sign.available ? 'available' : 'unavailable'}">
+                        ${sign.available ? 'พร้อมใช้งาน' : 'ยังไม่พร้อม'}
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // สร้าง grid เมื่อโหลดหน้าเว็บ
+        window.onload = createZodiacGrid;
+    </script>
+</body>
+</html>

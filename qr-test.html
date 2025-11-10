@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📱 ทดสอบ QR Code - ราศีตุลย์</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .qr-display {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .qr-code {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 20px;
+            border: 5px solid #000;
+            border-radius: 10px;
+        }
+
+        .instructions {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid cyan;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid cyan;
+        }
+
+        .btn {
+            display: inline-block;
+            background: rgba(0, 255, 255, 0.2);
+            border: 2px solid cyan;
+            color: cyan;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin: 10px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 255, 0.4);
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .demo-url {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+            margin: 15px 0;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.6); }
+        }
+
+        .qr-display {
+            animation: glow 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 ทดสอบ QR Code ราศีตุลย์</h1>
+        
+        <div class="success">
+            <h3>✅ QR Code พร้อมใช้งาน!</h3>
+            <p>QR Code นี้จะเปิดหน้า AR Hologram ของราศีตุลย์พร้อมคลิป Green Screen</p>
+        </div>
+
+        <div class="qr-display">
+            <div class="qr-code">
+                <!-- QR Code ที่คุณแนบมา -->
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAADAFBMVEX///8AAADMzMz/AAD/zMz//8zM/8z/zP///5n/mZn/zJnMzJnMmZmZmZmZzP+ZzMyZmcyZmZn/mWbMzGbMmWaZmWaZzGZmZmaZZmaZZpmZZmaZZpnMZplmZplmzP9mzMyZZsyZZmZmZsxmZpnMZsxmZsyMjIyMzMyMzP+MzMz/jMyMjMz/jIz/zIyMjP+MjPaMjIb/jIn/jIaMjJn/jGX/jJD/jGj/jGP/jF7/jFr/jFX/jFH/jE//jEz/jFD/jED/jD7/jDn/jC7/jCj/jB7/jBb/jA7/jAn/jAf/jAP/jAD/ygD/xgD/tgD/sgD/qgD/ogD/mgD/jgD/hgD/fgD/dgD/bgD/ZgD/XgD/VgD/TgD/RgD/PgD/NgD/LgD/JgD/HgD/FgD/DgD/BgD/AAD//93//9j//9P//87//8n//8T//7///7r//7X//7D//6v//6b//6H//5z//5f//5L//43//4j//4P//37//3n//3T//2///2r//2X//2D//1v//1b//1H//0z//0f//0L//z3//zj//zP//y7//yn//yT//x///xr//xX//xD//wv//wb//wH//v7//v3//vz//vv//vr//vn//vj//vf//vb//vX//vT//vP//vL//vH//vD//u///u7//u3//u7//uz//uv//ur//un//uj//uf//ub//uX//uT//uP//uL//uH//uD//t///t7//t3//tz//tv//tr//tn//tj//tf//tb//tX//tT//tP//tL//tH//tD//s///s7//s3//sz//sv//sr//sn//sj//sf//sb//sX//sT//sP//sL//sH//sD//r///r7//r3//rz//rv//rr//rn//rj//rf//rb//rX//rT//rP//rL//rH//rD//q///q7//q3//qz//qv//qr//qn//qj//qf//qb//qX//qT//qP//qL//qH//qD//p///p7//p3//pz//pv//pr//pn//pj//pf//pb//pX//pT//pP//pL//pH//pD//o///o7//o3//oz//ov//or//on//oj//of//ob//oX//oT//oP//oL//oH//oD//n" style="width: 100%; height: 100%; object-fit: contain;" alt="QR Code สำหรับราศีตุลย์">
+            </div>
+            <h4 style="color: #000; margin: 0;">สแกนด้วยกล้องมือถือ</h4>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 ขั้นตอนการทดสอบ</h3>
+            
+            <div class="step">
+                <strong>1️⃣ เปิดกล้องมือถือ</strong><br>
+                ใช้แอป Camera ปกติ (iPhone หรือ Android)
+            </div>
+            
+            <div class="step">
+                <strong>2️⃣ ส่องไปที่ QR Code</strong><br>
+                ระยะห่าง 15-30 ซม. ให้ QR Code อยู่ในกรอบชัดๆ
+            </div>
+            
+            <div class="step">
+                <strong>3️⃣ กดลิงก์ที่ขึ้นมา</strong><br>
+                มือถือจะแสดงลิงก์ แตะเพื่อเปิดเว็บเบราว์เซอร์
+            </div>
+            
+            <div class="step">
+                <strong>4️⃣ ดู AR Hologram!</strong><br>
+                จะเห็นวีดีโอ Green Screen + หินประจำราศี + ข้อความ
+            </div>
+        </div>
+
+        <div class="demo-url">
+            <strong>URL ที่ QR Code จะเปิด:</strong><br>
+            <span id="qrUrl">กำลังสร้าง URL...</span>
+        </div>
+
+        <div class="success">
+            <h4>🎬 คุณสมบัติพิเศษ</h4>
+            <ul style="text-align: left;">
+                <li><strong>Green Screen Video:</strong> ระบบจะ detect และใส่เอฟเฟค hologram อัตโนมัติ</li>
+                <li><strong>Dynamic Effects:</strong> เอฟเฟคเปลี่ยนแปลงตามจังหวะ</li>
+                <li><strong>QR Code Display:</strong> แสดง QR Code บนหน้าจอ AR</li>
+                <li><strong>Mobile Optimized:</strong> ใช้งานบนมือถือได้เต็มประสิทธิภาพ</li>
+            </ul>
+        </div>
+
+        <div style="margin: 40px 0;">
+            <a href="test-zodiac.html?sign=libra" class="btn">🧪 ทดสอบโดยตรง</a>
+            <a href="index.html?sign=libra" class="btn">✨ เวอร์ชันจริง</a>
+            <a href="select-zodiac.html" class="btn">🔙 กลับหน้าเลือกราศี</a>
+        </div>
+    </div>
+
+    <script>
+        // สร้าง URL สำหรับ QR Code
+        window.onload = () => {
+            const currentHost = window.location.host;
+            const protocol = window.location.protocol;
+            const qrUrl = `${protocol}//${currentHost}/index.html?sign=libra`;
+            
+            document.getElementById('qrUrl').textContent = qrUrl;
+            
+            console.log('🔗 QR Code URL:', qrUrl);
+            console.log('📱 Ready for mobile scanning!');
+        };
+    </script>
+</body>
+</html>

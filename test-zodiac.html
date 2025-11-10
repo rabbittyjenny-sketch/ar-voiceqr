@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧪 ทดสอบระบบ AR VoiceQR</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="ar-container"></div>
+  
+  <script>
+    // Test Version ที่ใช้ข้อมูลจำลองแทนการเรียก API จริง
+    class ZodiacARAppTest {
+      constructor() {
+        // ข้อมูลจำลองสำหรับทดสอบ
+        this.mockData = {
+          libra: {
+            zodiac_name: "ราศีตุลย์",
+            video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            stone_image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop&crop=center",
+            message: "คุณเป็นคนที่รักความยุติธรรมและสมดุล มักจะเป็นคนที่คิดมากและชั่งใจนาน แต่เมื่อตัดสินใจแล้วจะทำอย่างมั่นใจ ✨",
+            qr_url: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://example.com/index.html?sign=libra"
+          },
+          aries: {
+            zodiac_name: "ราศีเมษ", 
+            video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            stone_image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop&crop=center",
+            message: "คุณเป็นคนกล้าหาญและมีความมุ่งมั่นสูง ชอบเป็นผู้นำและไม่กลัวความท้าทาย 🔥"
+          }
+        };
+        this.container = null;
+      }
+
+      async init() {
+        try {
+          this.container = document.getElementById('ar-container');
+          const zodiacSign = this.getZodiacSignFromURL();
+          const zodiacData = await this.fetchZodiacData(zodiacSign);
+          this.renderARContent(zodiacData);
+        } catch (error) {
+          console.error("เกิดข้อผิดพลาด:", error);
+          this.showError(error.message);
+        }
+      }
+
+      getZodiacSignFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const zodiacSign = urlParams.get('sign');
+        if (!zodiacSign) {
+          throw new Error("ไม่พบราศีใน URL");
+        }
+        return zodiacSign;
+      }
+
+      async fetchZodiacData(zodiacSign) {
+        // จำลองการ delay ของ API
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        const data = this.mockData[zodiacSign.toLowerCase()];
+        
+        if (!data) {
+          throw new Error(`ยังไม่มีข้อมูลสำหรับราศี "${zodiacSign}" ในระบบทดสอบ`);
+        }
+        
+        console.log("🌟 Mock Data:", data);
+        return data;
+      }
+
+      renderARContent(data) {
+        this.container.innerHTML = '';
+        this.addLoadingComplete();
+
+        if (data.zodiac_name) {
+          this.addTitleElement(data.zodiac_name);
+        }
+
+        if (data.video_url) {
+          this.addVideoElement(data.video_url);
+        }
+
+        if (data.stone_image) {
+          this.addImageElement(data.stone_image);
+        }
+
+        if (data.message) {
+          this.addMessageElement(data.message);
+        }
+
+        if (data.qr_url) {
+          this.addQRElement(data.qr_url);
+        }
+
+        this.addBackButton();
+        this.addTestModeIndicator();
+      }
+
+      addLoadingComplete() {
+        const loadingEl = document.createElement('div');
+        loadingEl.textContent = '✅ ระบบทำงานปกติ';
+        loadingEl.style.cssText = `
+          position: absolute;
+          bottom: 80px;
+          right: 20px;
+          background: rgba(0, 255, 0, 0.2);
+          border: 1px solid #00ff00;
+          color: #00ff00;
+          padding: 8px 12px;
+          border-radius: 15px;
+          font-size: 12px;
+          z-index: 25;
+        `;
+        this.container.appendChild(loadingEl);
+
+        // ซ่อนหลัง 3 วินาที
+        setTimeout(() => loadingEl.remove(), 3000);
+      }
+
+      addTestModeIndicator() {
+        const testEl = document.createElement('div');
+        testEl.textContent = '🧪 โหมดทดสอบ';
+        testEl.style.cssText = `
+          position: absolute;
+          bottom: 80px;
+          left: 20px;
+          background: rgba(255, 165, 0, 0.2);
+          border: 1px solid #ffa500;
+          color: #ffa500;
+          padding: 8px 12px;
+          border-radius: 15px;
+          font-size: 12px;
+          z-index: 25;
+        `;
+        this.container.appendChild(testEl);
+      }
+
+      addTitleElement(title) {
+        const titleEl = document.createElement('h1');
+        titleEl.textContent = title;
+        titleEl.style.cssText = `
+          position: absolute;
+          top: 20px;
+          width: 100%;
+          text-align: center;
+          font-size: 2em;
+          color: cyan;
+          text-shadow: 0 0 20px #0ff;
+          margin: 0;
+          z-index: 10;
+        `;
+        this.container.appendChild(titleEl);
+      }
+
+      addVideoElement(videoUrl) {
+        const videoEl = document.createElement('video');
+        videoEl.src = videoUrl;
+        videoEl.autoplay = true;
+        videoEl.loop = true;
+        videoEl.muted = true; // เปลี่ยนเป็น muted สำหรับทดสอบ
+        videoEl.controls = true;
+        this.container.appendChild(videoEl);
+      }
+
+      addImageElement(imageUrl) {
+        const imgEl = document.createElement('img');
+        imgEl.src = imageUrl;
+        imgEl.alt = "Zodiac Stone";
+        this.container.appendChild(imgEl);
+      }
+
+      addMessageElement(message) {
+        const msgEl = document.createElement('p');
+        msgEl.textContent = message;
+        this.container.appendChild(msgEl);
+      }
+
+      addQRElement(qrUrl) {
+        const qrContainer = document.createElement('div');
+        qrContainer.style.cssText = `
+          position: absolute;
+          top: 70px;
+          left: 20px;
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid rgba(0, 255, 255, 0.5);
+          border-radius: 10px;
+          padding: 10px;
+          backdrop-filter: blur(10px);
+          z-index: 15;
+        `;
+
+        const qrImg = document.createElement('img');
+        qrImg.src = qrUrl;
+        qrImg.alt = 'QR Code';
+        qrImg.style.cssText = `
+          width: 80px;
+          height: 80px;
+          border-radius: 5px;
+          display: block;
+        `;
+
+        const qrLabel = document.createElement('p');
+        qrLabel.textContent = 'QR Code';
+        qrLabel.style.cssText = `
+          margin: 5px 0 0 0;
+          font-size: 12px;
+          text-align: center;
+          color: cyan;
+        `;
+
+        qrContainer.appendChild(qrImg);
+        qrContainer.appendChild(qrLabel);
+        this.container.appendChild(qrContainer);
+      }
+
+      addBackButton() {
+        const backBtn = document.createElement('button');
+        backBtn.textContent = '🔙 กลับ';
+        backBtn.onclick = () => window.location.href = 'select-zodiac.html';
+        backBtn.style.cssText = `
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: rgba(0, 255, 255, 0.2);
+          border: 2px solid cyan;
+          color: cyan;
+          padding: 10px 15px;
+          border-radius: 25px;
+          cursor: pointer;
+          font-size: 14px;
+          z-index: 20;
+        `;
+        this.container.appendChild(backBtn);
+      }
+
+      showError(message) {
+        if (this.container) {
+          this.container.innerHTML = `
+            <div style="
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              text-align: center;
+              padding: 30px;
+              background: rgba(255, 0, 0, 0.1);
+              border: 2px solid #ff6b6b;
+              border-radius: 15px;
+              max-width: 80%;
+            ">
+              <h2 style="color: #ff6b6b; margin-bottom: 20px;">⚠️ เกิดข้อผิดพลาด</h2>
+              <p class="error" style="margin-bottom: 20px;">${message}</p>
+              <button onclick="window.location.href='test-zodiac.html'" style="
+                background: rgba(0, 255, 255, 0.2);
+                border: 2px solid cyan;
+                color: cyan;
+                padding: 10px 20px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 16px;
+                margin-right: 10px;
+              ">🔄 ลองใหม่</button>
+              <button onclick="window.location.href='select-zodiac.html'" style="
+                background: rgba(255, 255, 255, 0.2);
+                border: 2px solid #fff;
+                color: #fff;
+                padding: 10px 20px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 16px;
+              ">🔙 กลับ</button>
+            </div>
+          `;
+        }
+      }
+    }
+
+    // เริ่มแอพเมื่อ DOM โหลดเสร็จ
+    window.onload = () => {
+      const app = new ZodiacARAppTest();
+      app.init();
+    };
+  </script>
+</body>
+</html>
