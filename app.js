@@ -2,7 +2,7 @@
 
 class ZodiacARApp {
   constructor() {
-    this.sheetWebAppUrl = "https://script.google.com/macros/s/AKfycby0QXZTg88hkRDAtIkBTu-fvfdh4B2ijlnNfLg3AMN8DQzBn2iB3Duy_sTxR16ldjFs/exec";
+    this.sheetWebAppUrl = "https://script.google.com/macros/s/AKfycbwq7Ae86jNo_uR-EBjk3dcwS0r555veHTILW5fjgXajLa6R4DdO3jpWfa1GTMtZO1k/exec";
     this.container = null;
   }
 
